@@ -43,7 +43,7 @@ interactions and sources. Any citation it never actually saw gets marked
 ## Getting started
 
 ```bash
-git clone <this-repo-url>
+git clone https://github.com/isaiahboland-dotcom/ai-supplement-script.git
 cd research-script
 
 python3 -m venv .venv
