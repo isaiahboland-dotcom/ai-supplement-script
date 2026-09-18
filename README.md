@@ -44,7 +44,7 @@ interactions and sources. Any citation it never actually saw gets marked
 
 ```bash
 git clone https://github.com/isaiahboland-dotcom/ai-supplement-script.git
-cd research-script
+cd ai-supplement-script
 
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
