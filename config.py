@@ -90,6 +90,7 @@ else:
 LLM_TIMEOUT = env_int("LLM_TIMEOUT", 600)
 LLM_MAX_TOKENS = env_int("LLM_MAX_TOKENS", 16000)    # Claude requires this
 OLLAMA_NUM_CTX = env_int("OLLAMA_NUM_CTX", 32768)    # Ollama's default is too small for research
+OLLAMA_THINK = env("OLLAMA_THINK")                   # optional: true | false | low | medium | high
 LLM_EFFORT = env("LLM_EFFORT")                       # Claude only, optional: low | medium | high | xhigh | max
 CLAUDE_FALLBACKS = env("CLAUDE_FALLBACKS", "default")  # "default" or "off"
 
