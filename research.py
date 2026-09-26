@@ -47,7 +47,7 @@ DISCLAIMER = (
 
 
 # ---------------------------------------------------------------- prompts
-
+#bboth the reserch and review prompts were created by claude
 RESEARCH_PROMPT = """You are a careful research assistant who evaluates dietary supplements and vitamins.
 Your notes will help a person have an informed conversation with their doctor, so accuracy and honest
 evidence strength matter more than sounding positive. Never invent studies, numbers or URLs.
@@ -267,6 +267,7 @@ def do_research(name, focus, logfile, sources):
     fetched = []
     best = ""
     tools_open = True
+    empties = 0
 
     for step in range(1, config.MAX_RESEARCH_STEPS + 1):
         # give the model one last nudge to actually write the answer
@@ -281,9 +282,19 @@ def do_research(name, focus, logfile, sources):
         write_log(logfile, "MODEL step %d" % step, reply)
 
         if not reply:
-            print("(empty reply, retrying)")
-            messages.append({"role": "user", "content": "Your reply was empty. Continue the research."})
+            empties += 1
+            print("(empty reply: %s)" % llm.last_empty_reason)
+            write_log(logfile, "EMPTY step %d" % step, llm.last_empty_reason)
+            if empties >= 3:
+                # same prompt, same low temperature -> it's not going to fix itself
+                raise llm.LLMError("model returned 3 empty replies in a row (%s)"
+                                   % llm.last_empty_reason)
+            # nudge only once; stacking user messages confuses strict chat templates
+            if empties == 1:
+                messages.append({"role": "user", "content":
+                    "Your reply was empty. Continue: reply with one JSON tool call, or the final answer."})
             continue
+        empties = 0
 
         action = get_action(reply)
 
